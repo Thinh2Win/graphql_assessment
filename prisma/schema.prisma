@@ -10,8 +10,22 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-model Book {
-  id    Int     @id @default(autoincrement())
-  title String
-  author String
+model Appointment {
+  id Int @id
+  patientId String
+  date String
+  type String
+  patient Patient @relation(fields: [patientId], references: [id])
+}
+
+model Patient {
+    id String @id
+    firstName String
+    lastName String
+    name String
+    dob String
+    email String
+    phone String
+    address String
+    appointments Appointment[]
 }

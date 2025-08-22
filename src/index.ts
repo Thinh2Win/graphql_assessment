@@ -10,40 +10,78 @@ const prisma = new PrismaClient();
 const typeDefs = `#graphql
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
+  type Appointment {
+    id: ID!
+    patientId: ID!
+    date: String
+    type: String
+  }
+
+  type Patient {
+    id: ID!
+    firstName: String
+    lastName: String
+    name: String
+    dob: String
+    email: String
+    phone: String
+    address: String
+    appointments: [Appointment!]
   }
 
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
-    books: [Book]
+    patients: [Patient]
+    patient(patientId: ID!): Patient
+    appointments(patientId: ID!): [Appointment]
+    appointment(appointmentId: ID!): Appointment
   }
 `;
 
-const books = [
+const appointments = [
   {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
+    id: 1,
+    patientId: '1',
+    date: '01-01-2022',
+    type: 'follow up'
   },
   {
-    title: 'City of Glass',
-    author: 'Paul Auster',
+    id: 2,
+    patientId: '1',
+    date: '02-03-2025',
+    type: 'check up'
   },
-];
+]
 
-await prisma.book.createMany({
-  data: books,
-})
+const patients = [
+  {
+    id: '1',
+    firstName: 'Jin',
+    lastName: 'Lee',
+    name: 'Jin Lee',
+    dob: '01-02-1994',
+    phone: '123456789',
+    email: null,
+    address: '1234 home street'
+  }
+]
+await prisma.appointment.deleteMany({})
+await prisma.patient.deleteMany({})
+await prisma.patient.createMany({data: patients})
+await prisma.appointment.createMany({data: appointments})
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
-    books: async() => await prisma.book.findMany(),
+    patients: async() => await prisma.patient.findMany({}),
+    patient: async(parent, {patientId}) => await prisma.patient.findUnique({where: {id: patientId}}),
+    appointments: async(parent, {patientId}) => await prisma.appointment.findMany({where: {patientId: patientId}})
   },
+  Patient: {
+    appointments: async(parent) => await prisma.appointment.findMany({where: {patientId: parent.id}})
+  }
 };
 
 // The ApolloServer constructor requires two parameters: your schema
