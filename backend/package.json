@@ -15,7 +15,10 @@
   "dependencies": {
     "@apollo/server": "^5.0.0",
     "@prisma/client": "^6.14.0",
+    "csv-parser": "^3.2.0",
+    "dayjs": "^1.11.13",
     "graphql": "^16.11.0",
+    "libphonenumber-js": "^1.12.13",
     "prisma": "^6.14.0",
     "sqlite3": "^5.1.7"
   },

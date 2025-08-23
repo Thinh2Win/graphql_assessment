@@ -11,20 +11,19 @@ datasource db {
 }
 
 model Appointment {
-  id Int @id
-  patientId String
-  date String
-  type String
-  patient Patient @relation(fields: [patientId], references: [id])
+  id String @id @map("appointment_id")
+  patient_id String
+  appointment_date String
+  appointment_type String
+  patient Patient @relation(fields: [patient_id], references: [id])
 }
 
 model Patient {
-    id String @id
-    firstName String
-    lastName String
-    name String
+    id String @id @map("patient_id")
+    first_name String
+    last_name String
     dob String
-    email String
+    email String?
     phone String
     address String
     appointments Appointment[]

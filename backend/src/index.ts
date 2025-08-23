@@ -12,16 +12,15 @@ const typeDefs = `#graphql
 
   type Appointment {
     id: ID!
-    patientId: ID!
-    date: String
-    type: String
+    patient_id: ID!
+    appointment_date: String
+    appointment_type: String
   }
 
   type Patient {
     id: ID!
-    firstName: String
-    lastName: String
-    name: String
+    first_name: String
+    last_name: String
     dob: String
     email: String
     phone: String
@@ -40,47 +39,17 @@ const typeDefs = `#graphql
   }
 `;
 
-const appointments = [
-  {
-    id: 1,
-    patientId: '1',
-    date: '01-01-2022',
-    type: 'follow up'
-  },
-  {
-    id: 2,
-    patientId: '1',
-    date: '02-03-2025',
-    type: 'check up'
-  },
-]
-
-const patients = [
-  {
-    id: '1',
-    firstName: 'Jin',
-    lastName: 'Lee',
-    name: 'Jin Lee',
-    dob: '01-02-1994',
-    phone: '123456789',
-    email: null,
-    address: '1234 home street'
-  }
-]
-await prisma.appointment.deleteMany({})
-await prisma.patient.deleteMany({})
-await prisma.patient.createMany({data: patients})
-await prisma.appointment.createMany({data: appointments})
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 const resolvers = {
   Query: {
     patients: async() => await prisma.patient.findMany({}),
     patient: async(parent, {patientId}) => await prisma.patient.findUnique({where: {id: patientId}}),
-    appointments: async(parent, {patientId}) => await prisma.appointment.findMany({where: {patientId: patientId}})
+    appointments: async(parent, {patientId}) => await prisma.appointment.findMany({where: {patient_id: patientId}}),
+    appointment: async(parent, {appointmentId}) => await prisma.appointment.findUnique({where: {id: appointmentId}}),
   },
   Patient: {
-    appointments: async(parent) => await prisma.appointment.findMany({where: {patientId: parent.id}})
+    appointments: async(parent) => await prisma.appointment.findMany({where: {patient_id: parent.id}})
   }
 };
 
