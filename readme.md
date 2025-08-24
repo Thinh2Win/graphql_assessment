@@ -28,7 +28,7 @@ npm install
 cd backend
 
 # Generate Prisma client and setup database
-npm install
+post install will handle prisma db setup
 ```
 
 ### 3. Seed Database (Optional)
