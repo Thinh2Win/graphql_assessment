@@ -16,21 +16,21 @@ fs.createReadStream('phi.csv')
         const appointment = {patient_id: data.patient_id};
         for (let info in data) {
             let val = data[info];
-            if (!val.length) data[info] = null
-            else if (info === 'dob' || info === 'appointment_date') data[info] = dayjs(val).isValid() ? dayjs(val).format('MM-DD-YYYY') : null
-            else if (info === 'email' && !val.includes('@')) data['email'] = null
+            if (!val.length) data[info] = ''
+            else if (info === 'dob' || info === 'appointment_date') data[info] = dayjs(val).isValid() ? dayjs(val).format('MM-DD-YYYY') : ''
+            else if (info === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) data['email'] = ''
             else if (info === 'phone') {
                 const phoneNumber = parsePhoneNumber(val, 'US');
                 // just checking if phone number is correct length as valid
-                data['phone'] = isPossiblePhoneNumber(val, 'US') ? phoneNumber.number : null
+                data['phone'] = isPossiblePhoneNumber(val, 'US') ? phoneNumber.number : ''
             }
             // separate patient and appointment info
             if (info.includes('appointment')) {
                 if (info === 'appointment_id') appointment['id'] = val
-                else appointment[info] = val
+                else appointment[info] = data[info]
             }
             else if (info === 'patient_id') patient['id'] = val
-            else patient[info] = val
+            else patient[info] = data[info]
         }
 
         patients.push(patient);

@@ -123,7 +123,7 @@ The application implements robust data validation during CSV import through the 
 
 The CSV validation is designed to be permissive during data import to maximize data retention since the application layer usually enforces stricter validation for user input.
 
-As a result I choice prioritizing successful data import over perfect validation for the seeding process when validating dates, phone numbers, and email. Originally I went with validator.js npm package but found that it was too strict and would mark several phone numbers for example as invalid. For example for 5551234567, this should be a valid test number but validator.js still marks it as invalid. So I went with libphonenumber-js for validation instead. Similarly I did a simple email validation check with just checking for '@' symbol which will definitely fail for edge cases where users can use multiple @ signs, so given more time I would address that validation to be stricter. For dates, dayjs npm package offered the cleanest syntax for normalizing dates. 
+As a result I choice prioritizing successful data import over perfect validation for the seeding process when validating dates, phone numbers, and email. Originally I went with validator.js npm package but found that it was too strict and would mark several phone numbers for example as invalid. For example for 5551234567, this should be a valid test number but validator.js still marks it as invalid. So I went with libphonenumber-js for validation instead. Similarly I did a simple email validation check with just checking for one '@' symbol, at least one character for the local part before the @ symbol, and domain part after the @ symbol. For dates, dayjs npm package offered the cleanest syntax for normalizing dates. 
 
 ## Usage
 

@@ -23,7 +23,7 @@ model Patient {
     first_name String
     last_name String
     dob String
-    email String?
+    email String
     phone String
     address String
     appointments Appointment[]
